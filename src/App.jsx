@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage'
 import CategoriesPage from './pages/CategoriesPage'
 import MenuItemsPage from './pages/MenuItemsPage'
 import OrdersPage from './pages/OrdersPage'
+import LoginPage from './pages/LoginPage'   // ⭐ Lägg till denna import
 
 function App() {
     return (
@@ -16,6 +17,9 @@ function App() {
                     <Route path="/categories" element={<CategoriesPage />} />
                     <Route path="/menu-items" element={<MenuItemsPage />} />
                     <Route path="/orders" element={<OrdersPage />} />
+
+                    {/* ⭐ Här lägger du in login-routen */}
+                    <Route path="/login" element={<LoginPage />} />
                 </Routes>
             </MainLayout>
         </ThemeProvider>

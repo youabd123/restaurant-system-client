@@ -5,6 +5,7 @@ import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
 import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
+import { Link, useNavigate } from "react-router-dom";
 
 const navigationItems = [
   { label: 'Home', href: '/' },
@@ -14,6 +15,14 @@ const navigationItems = [
 ]
 
 export default function MainLayout({ children }) {
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  function handleLogout() {
+    localStorage.removeItem("token");
+    navigate("/login");
+  }
+
   return (
     <Box sx={{ minHeight: '100vh', bgcolor: 'background.default' }}>
       <AppBar position="static" color="primary" elevation={0}>
@@ -56,6 +65,34 @@ export default function MainLayout({ children }) {
                   {item.label}
                 </Button>
               ))}
+
+              {/* ⭐ Visa Login eller Logout beroende på token */}
+              {!token ? (
+                <Button
+                  component={Link}
+                  to="/login"
+                  color="inherit"
+                  sx={{
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    marginLeft: '1rem',
+                  }}
+                >
+                  Login
+                </Button>
+              ) : (
+                <Button
+                  onClick={handleLogout}
+                  color="inherit"
+                  sx={{
+                    fontWeight: 600,
+                    textTransform: 'none',
+                    marginLeft: '1rem',
+                  }}
+                >
+                  Logout
+                </Button>
+              )}
             </Stack>
           </Toolbar>
         </Container>
