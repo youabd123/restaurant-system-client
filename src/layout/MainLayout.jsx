@@ -66,7 +66,23 @@ export default function MainLayout({ children }) {
                 </Button>
               ))}
 
-              {/* ⭐ Visa Login eller Logout beroende på token */}
+              
+              {!token && (
+                <Button
+                  component={Link}
+                  to="/register"
+                  color="inherit"
+                  sx={{
+                    fontWeight: 600,
+                    textTransform: "none",
+                    marginLeft: "1rem",
+                  }}
+                >
+                  Register
+                </Button>
+              )}
+
+              
               {!token ? (
                 <Button
                   component={Link}
@@ -120,3 +136,4 @@ export default function MainLayout({ children }) {
     </Box>
   )
 }
+

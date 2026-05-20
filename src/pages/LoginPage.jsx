@@ -19,9 +19,11 @@ export default function LoginPage() {
       console.log("Logged in:", data);
       alert("Login successful!");
     } catch (err) {
-      console.error(err);
-      setError("Fel email eller lösenord.");
-    }
+    console.log("LOGIN ERROR:", err.response?.data);
+    console.error(err);
+    setError("Fel email eller lösenord.");
+}
+
   }
 
   return (
