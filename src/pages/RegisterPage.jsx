@@ -1,6 +1,5 @@
 import { useState } from "react";
-import { registerUser } from "../services/registerService";
-import { TextField, Button, Box, Typography, Stack } from "@mui/material";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export default function RegisterPage() {
@@ -16,59 +15,67 @@ export default function RegisterPage() {
     setError("");
 
     try {
-      await registerUser(fullName, email, password);
+      const response = await axios.post(
+  "https://localhost:7134/api/Auth/register",
+  {
+    fullName,
+    email,
+    password,
+  }
+);
 
-      alert("Account created successfully!");
-      navigate("/login");
+
+      // ⭐ Spara token + användarnamn
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("userName", response.data.fullName);
+
+      // ⭐ Redirect
+      navigate("/");
     } catch (err) {
-      console.error(err);
       setError("Registration failed. Try again.");
     }
   }
 
   return (
-    <Box sx={{ maxWidth: 400, mx: "auto", mt: 5 }}>
-      <Typography variant="h4" mb={3}>
-        Register
-      </Typography>
+    <div style={{ maxWidth: 400, margin: "0 auto" }}>
+      <h2>Register</h2>
 
-      {error && (
-        <Typography color="error" mb={2}>
-          {error}
-        </Typography>
-      )}
+      {error && <p style={{ color: "red" }}>{error}</p>}
 
       <form onSubmit={handleSubmit}>
-        <Stack spacing={2}>
-          <TextField
-          label="Full Name"
-          value={fullName}
-          onChange={(e) => setFullName(e.target.value)}
-          required
-/>
+        <div>
+          <label>Full Name</label>
+          <input
+            type="text"
+            value={fullName}
+            onChange={(e) => setFullName(e.target.value)}
+            required
+          />
+        </div>
 
-
-          <TextField
-            label="Email"
+        <div>
+          <label>Email</label>
+          <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
           />
+        </div>
 
-          <TextField
-            label="Password"
+        <div>
+          <label>Password</label>
+          <input
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
+        </div>
 
-          <Button type="submit" variant="contained" color="primary">
-            Create Account
-          </Button>
-        </Stack>
+        <button type="submit">Create Account</button>
       </form>
-    </Box>
+    </div>
   );
 }
+

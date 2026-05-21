@@ -17,9 +17,11 @@ const navigationItems = [
 export default function MainLayout({ children }) {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  const userName = localStorage.getItem("userName");
 
   function handleLogout() {
     localStorage.removeItem("token");
+    localStorage.removeItem("userName");
     navigate("/login");
   }
 
@@ -66,7 +68,6 @@ export default function MainLayout({ children }) {
                 </Button>
               ))}
 
-              
               {!token && (
                 <Button
                   component={Link}
@@ -82,7 +83,6 @@ export default function MainLayout({ children }) {
                 </Button>
               )}
 
-              
               {!token ? (
                 <Button
                   component={Link}
@@ -97,17 +97,29 @@ export default function MainLayout({ children }) {
                   Login
                 </Button>
               ) : (
-                <Button
-                  onClick={handleLogout}
-                  color="inherit"
-                  sx={{
-                    fontWeight: 600,
-                    textTransform: 'none',
-                    marginLeft: '1rem',
-                  }}
-                >
-                  Logout
-                </Button>
+                <>
+                  <Typography
+                    sx={{
+                      fontWeight: 600,
+                      marginLeft: "1rem",
+                      textTransform: "none",
+                    }}
+                  >
+                    Hej, {userName}
+                  </Typography>
+
+                  <Button
+                    onClick={handleLogout}
+                    color="inherit"
+                    sx={{
+                      fontWeight: 600,
+                      textTransform: 'none',
+                      marginLeft: '1rem',
+                    }}
+                  >
+                    Logout
+                  </Button>
+                </>
               )}
             </Stack>
           </Toolbar>
@@ -136,4 +148,3 @@ export default function MainLayout({ children }) {
     </Box>
   )
 }
-

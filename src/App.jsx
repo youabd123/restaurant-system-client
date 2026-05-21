@@ -6,20 +6,47 @@ import HomePage from './pages/HomePage'
 import CategoriesPage from './pages/CategoriesPage'
 import MenuItemsPage from './pages/MenuItemsPage'
 import OrdersPage from './pages/OrdersPage'
-import LoginPage from './pages/LoginPage'   // ⭐ Lägg till denna import
-import RegisterPage from "./pages/RegisterPage";
+import LoginPage from './pages/LoginPage'
+import RegisterPage from "./pages/RegisterPage"
+import RequireAuth from "./components/RequireAuth"
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
             <MainLayout>
                 <Routes>
+                    {/* Öppna sidor */}
                     <Route path="/" element={<HomePage />} />
-                    <Route path="/categories" element={<CategoriesPage />} />
-                    <Route path="/menu-items" element={<MenuItemsPage />} />
-                    <Route path="/orders" element={<OrdersPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
                     <Route path="/login" element={<LoginPage />} />
+                    <Route path="/register" element={<RegisterPage />} />
+
+                    {/* Skyddade sidor */}
+                    <Route
+                        path="/categories"
+                        element={
+                            <RequireAuth>
+                                <CategoriesPage />
+                            </RequireAuth>
+                        }
+                    />
+
+                    <Route
+                        path="/menu-items"
+                        element={
+                            <RequireAuth>
+                                <MenuItemsPage />
+                            </RequireAuth>
+                        }
+                    />
+
+                    <Route
+                        path="/orders"
+                        element={
+                            <RequireAuth>
+                                <OrdersPage />
+                            </RequireAuth>
+                        }
+                    />
                 </Routes>
             </MainLayout>
         </ThemeProvider>
@@ -27,3 +54,4 @@ function App() {
 }
 
 export default App
+
