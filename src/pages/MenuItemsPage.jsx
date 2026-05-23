@@ -1,21 +1,16 @@
-import { useEffect, useState } from 'react'
-import { getMenuItems } from '../api/menuItemApi'
+import { useMenuItems } from '../hooks/useMenuItems'
+import { formatPrice } from '../helpers/formatPrice'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function MenuItemsPage() {
-    const [menuItems, setMenuItems] = useState([])
-    const [error, setError] = useState(null)
+    const { menuItems, loading, error } = useMenuItems()
 
-    useEffect(() => {
-        getMenuItems()
-            .then((res) => setMenuItems(res.data))
-            .catch(() => setError('Kunde inte hämta menyartiklar'))
-    }, [])
-
+    if (loading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
     if (error) return <Typography color="error">{error}</Typography>
 
     return (
@@ -28,7 +23,7 @@ export default function MenuItemsPage() {
                             <CardContent>
                                 <Typography variant="h6">{item.name}</Typography>
                                 <Typography color="text.secondary">{item.description}</Typography>
-                                <Typography fontWeight={700}>{item.price} kr</Typography>
+                                <Typography fontWeight={700}>{formatPrice(item.price)}</Typography>
                             </CardContent>
                         </Card>
                     </Grid>

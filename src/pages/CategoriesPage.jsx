@@ -1,21 +1,15 @@
-import { useEffect, useState } from 'react'
-import { getCategories } from '../api/categoryApi'
+import { useCategories } from '../hooks/useCategories'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function CategoriesPage() {
-    const [categories, setCategories] = useState([])
-    const [error, setError] = useState(null)
+    const { categories, loading, error } = useCategories()
 
-    useEffect(() => {
-        getCategories()
-            .then((res) => setCategories(res.data))
-            .catch(() => setError('Kunde inte hämta kategorier'))
-    }, [])
-
+    if (loading) return <Box display="flex" justifyContent="center" mt={4}><CircularProgress /></Box>
     if (error) return <Typography color="error">{error}</Typography>
 
     return (
