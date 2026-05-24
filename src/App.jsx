@@ -21,9 +21,10 @@ function App() {
                     <Route path="/categories" element={<CategoriesPage />} />
                     <Route path="/menu-items" element={<MenuItemsPage />} />
                     <Route path="/orders" element={
-                        <ProtectedRoute>
-                            <OrdersPage />
-                        </ProtectedRoute>
+                        <ProtectedRoute requiredRole="Admin">
+    <OrdersPage />
+</ProtectedRoute>
+
                     } />
                 </Routes>
             </MainLayout>

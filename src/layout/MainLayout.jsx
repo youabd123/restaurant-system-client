@@ -10,7 +10,7 @@ import Typography from '@mui/material/Typography'
 
 export default function MainLayout({ children }) {
     const { user, logout } = useAuth()
-    const navigate = useNavigate()
+    const isAdmin = user?.roles?.includes('Admin')
 
     const handleLogout = () => {
         logout()
@@ -34,7 +34,7 @@ export default function MainLayout({ children }) {
                             <Button color="inherit" href="/">Hem</Button>
                             <Button color="inherit" href="/categories">Kategorier</Button>
                             <Button color="inherit" href="/menu-items">Meny</Button>
-                            {user && <Button color="inherit" href="/orders">Ordrar</Button>}
+                            {isAdmin && <Button color="inherit" href="/orders">Ordrar</Button>}
                             {user ? (
                                 <Button color="inherit" onClick={handleLogout}>Logga ut</Button>
                             ) : (
