@@ -1,26 +1,24 @@
-import { useEffect, useState } from 'react'
-import { getOrders } from '../api/orderApi'
+import { useOrders } from '../Hooks/useOrders'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import CircularProgress from '@mui/material/CircularProgress'
+import Chip from '@mui/material/Chip'
 
 export default function OrdersPage() {
-    const [orders, setOrders] = useState([])
-    const [error, setError] = useState(null)
+    const { orders, loading, error } = useOrders()
 
-    useEffect(() => {
-        getOrders()
-            .then((res) => setOrders(res.data))
-            .catch(() => setError('Kunde inte hämta ordrar'))
-    }, [])
-
-    if (error) return <Typography color="error">{error}</Typography>
+    if (loading) return <Box display="flex" justifyContent="center" mt={8}><CircularProgress /></Box>
+    if (error) return <Typography color="error" textAlign="center" mt={4}>{error}</Typography>
 
     return (
         <Box>
-            <Typography variant="h4" mb={3}>Ordrar</Typography>
+            <Box mb={4}>
+                <Typography variant="h3" fontWeight={800}>Ordrar</Typography>
+                <Typography color="text.secondary" mt={1}>{orders.length} ordrar totalt</Typography>
+            </Box>
             <Grid container spacing={2}>
                 {orders.map((order) => (
                     <Grid item xs={12} sm={6} md={4} key={order.id}>
@@ -28,7 +26,9 @@ export default function OrdersPage() {
                             <CardContent>
                                 <Typography variant="h6">{order.customerName}</Typography>
                                 <Typography color="text.secondary">{order.customerEmail}</Typography>
-                                <Typography>Status: {order.status}</Typography>
+                                <Box mt={1}>
+                                    <Chip label={order.status} size="small" color="primary" />
+                                </Box>
                             </CardContent>
                         </Card>
                     </Grid>

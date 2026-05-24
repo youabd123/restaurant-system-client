@@ -49,7 +49,10 @@ export default function LoginPage() {
       </Button>
       <Button href="/register" fullWidth sx={{ mt: 1 }}>
         Har du inget konto? Registrera dig
-      </Button>
+          </Button>
+          <Button href="/reset-password" fullWidth sx={{ mt: 1 }}>
+              Glömt lösenordet?
+          </Button>
     </Box>
   )
 }

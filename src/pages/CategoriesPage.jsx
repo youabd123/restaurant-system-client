@@ -1,26 +1,23 @@
-import { useEffect, useState } from 'react'
-import { getCategories } from '../api/categoryApi'
+import { useCategories } from '../Hooks/useCategories'
 import Typography from '@mui/material/Typography'
 import Box from '@mui/material/Box'
 import Card from '@mui/material/Card'
 import CardContent from '@mui/material/CardContent'
 import Grid from '@mui/material/Grid'
+import CircularProgress from '@mui/material/CircularProgress'
 
 export default function CategoriesPage() {
-    const [categories, setCategories] = useState([])
-    const [error, setError] = useState(null)
+    const { categories, loading, error } = useCategories()
 
-    useEffect(() => {
-        getCategories()
-            .then((res) => setCategories(res.data))
-            .catch(() => setError('Kunde inte hämta kategorier'))
-    }, [])
-
-    if (error) return <Typography color="error">{error}</Typography>
+    if (loading) return <Box display="flex" justifyContent="center" mt={8}><CircularProgress /></Box>
+    if (error) return <Typography color="error" textAlign="center" mt={4}>{error}</Typography>
 
     return (
         <Box>
-            <Typography variant="h4" mb={3}>Kategorier</Typography>
+            <Box mb={4}>
+                <Typography variant="h3" fontWeight={800}>Kategorier</Typography>
+                <Typography color="text.secondary" mt={1}>{categories.length} kategorier</Typography>
+            </Box>
             <Grid container spacing={2}>
                 {categories.map((cat) => (
                     <Grid item xs={12} sm={6} md={4} key={cat.id}>
