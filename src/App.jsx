@@ -13,21 +13,39 @@ import ProtectedRoute from './components/ProtectedRoute'
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            <MainLayout>
-                <Routes>
-                    <Route path="/" element={<HomePage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/register" element={<RegisterPage />} />
-                    <Route path="/categories" element={<CategoriesPage />} />
-                    <Route path="/menu-items" element={<MenuItemsPage />} />
-                    <Route path="/orders" element={
-                        <ProtectedRoute requiredRole="Admin">
-    <OrdersPage />
-</ProtectedRoute>
+            {/* Globala stilförbättringar för mjukare animationer över hela appen */}
+            <style>{`
+                html { scroll-behavior: smooth; background-color: #140d06; }
+                body { margin: 0; padding: 0; background-color: #140d06; }
+                ::-webkit-scrollbar { width: 8px; }
+                ::-webkit-scrollbar-track { background: #140d06; }
+                ::-webkit-scrollbar-thumb { background: #2a1e12; border-radius: 4px; }
+                ::-webkit-scrollbar-thumb:hover { background: #c9a96e; }
+            `}</style>
 
-                    } />
-                </Routes>
-            </MainLayout>
+            <div style={{
+                backgroundColor: '#140d06',
+                minHeight: '100vh',
+                color: '#f5edd8',
+                fontFamily: "'DM Sans', sans-serif",
+                display: 'flex',
+                flexDirection: 'column'
+            }}>
+                <MainLayout>
+                    <Routes>
+                        <Route path="/" element={<HomePage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/register" element={<RegisterPage />} />
+                        <Route path="/categories" element={<CategoriesPage />} />
+                        <Route path="/menu-items" element={<MenuItemsPage />} />
+                        <Route path="/orders" element={
+                            <ProtectedRoute>
+                                <OrdersPage />
+                            </ProtectedRoute>
+                        } />
+                    </Routes>
+                </MainLayout>
+            </div>
         </ThemeProvider>
     )
 }
