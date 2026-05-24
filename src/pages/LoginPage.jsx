@@ -16,7 +16,7 @@ export default function LoginPage() {
             login(res.data)
             navigate('/')
         } catch {
-            setError('Fel email eller lösenord')
+            setError('fel email eller lösenord')
         }
     }
 
