@@ -1,104 +1,64 @@
-import { useEffect, useState } from 'react'
-import { getOrders } from '../api/orderApi'
-import Typography from '@mui/material/Typography'
-import Box from '@mui/material/Box'
-import Grid from '@mui/material/Grid'
+const mockOrders = [
+    { id: 1, customerName: 'Alessandro Rossi', customerEmail: 'a.rossi@gmail.com', status: 'Completed' },
+    { id: 2, customerName: 'Sofia Andersson', customerEmail: 'sofia.a@hotmail.com', status: 'Confirmed' },
+    { id: 3, customerName: 'Marco Bianchi', customerEmail: 'm.bianchi@gmail.com', status: 'Pending' },
+    { id: 4, customerName: 'Emma Lindqvist', customerEmail: 'emma.l@gmail.com', status: 'Cancelled' },
+    { id: 5, customerName: 'Luca Ferrari', customerEmail: 'luca.f@yahoo.com', status: 'Completed' },
+]
+
+const statusColor = {
+    Pending: { bg: 'rgba(200,169,81,0.15)', color: '#c9a96e', border: 'rgba(200,169,81,0.4)' },
+    Confirmed: { bg: 'rgba(100,180,100,0.15)', color: '#7ec87e', border: 'rgba(100,180,100,0.4)' },
+    Cancelled: { bg: 'rgba(220,80,80,0.15)', color: '#e08080', border: 'rgba(220,80,80,0.4)' },
+    Completed: { bg: 'rgba(100,180,100,0.2)', color: '#5db85d', border: 'rgba(100,180,100,0.5)' },
+}
+
+const styles = `
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+.ord-hero { background: #1a1208; color: #f5edd8; padding: 3rem 2rem 2.5rem; text-align: center; border-radius: 12px; margin-bottom: 2.5rem; }
+.ord-eyebrow { font-size: 11px; font-weight: 500; letter-spacing: 0.3em; text-transform: uppercase; color: #c9a96e; margin-bottom: 0.75rem; }
+.ord-title { font-family: 'Playfair Display', serif; font-size: 2.5rem; font-weight: 700; }
+.ord-table { width: 100%; border-collapse: collapse; background: #1a1208; border-radius: 12px; overflow: hidden; border: 0.5px solid rgba(200,169,81,0.3); }
+.ord-table th { background: #120d05; font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: #c9a96e; padding: 0.85rem 1.25rem; text-align: left; border-bottom: 0.5px solid rgba(200,169,81,0.2); }
+.ord-table td { padding: 1rem 1.25rem; border-bottom: 0.5px solid rgba(200,169,81,0.1); font-size: 14px; color: #f5edd8; }
+.ord-table tr:last-child td { border-bottom: none; }
+.ord-table tr:hover td { background: rgba(200,169,81,0.05); }
+.status-badge { display: inline-block; font-size: 11px; font-weight: 500; padding: 3px 10px; border-radius: 20px; border: 0.5px solid; }
+`
 
 export default function OrdersPage() {
-    const [orders, setOrders] = useState([])
-    const [error, setError] = useState(null)
-
-    useEffect(() => {
-        getOrders()
-            .then((res) => setOrders(res.data))
-            .catch(() => setError('Kunde inte hämta ordrar'))
-    }, [])
-
-    if (error) return (
-        <Typography style={{ color: '#f09595', textAlign: 'center', marginTop: '4rem', fontFamily: "'DM Sans', sans-serif" }}>
-            {error}
-        </Typography>
-    )
-
-    const getStatusStyle = (status) => {
-        const s = status?.toLowerCase()
-        if (s === 'levererad' || s === 'completed' || s === 'klar') {
-            return { background: 'rgba(76, 175, 80, 0.1)', color: '#81c784', border: '1px solid rgba(76, 175, 80, 0.2)' }
-        }
-        if (s === 'behandlas' || s === 'pending' || s === 'mottagen') {
-            return { background: 'rgba(201, 169, 110, 0.1)', color: '#c9a96e', border: '1px solid rgba(201, 169, 110, 0.2)' }
-        }
-        return { background: 'rgba(255,255,255,0.05)', color: '#aaa', border: '1px solid rgba(255,255,255,0.1)' }
-    }
-
     return (
-        <Box sx={{ fontFamily: "'DM Sans', sans-serif" }}>
-            <h1 style={{
-                fontFamily: "'Playfair Display', serif",
-                fontSize: '2.2rem',
-                fontWeight: 400,
-                color: '#f5edd8',
-                marginBottom: '2.5rem',
-                borderBottom: '1px solid rgba(201, 169, 110, 0.1)',
-                paddingBottom: '1rem',
-                fontStyle: 'italic',
-                textAlign: 'center'
-            }}>
-                Aktiva Beställningar (Admin)
-            </h1>
-
-            {orders.length === 0 ? (
-                <div style={{ textAlign: 'center', padding: '5rem 1rem', color: 'rgba(245, 237, 216, 0.3)', fontSize: '14px' }}>
-                    Inga lagda beställningar registrerade just nu.
-                </div>
-            ) : (
-                <Grid container spacing={2}>
-                    {orders.map((order) => (
-                        <Grid item xs={12} key={order.id}>
-                            <Box sx={{
-                                background: '#1f160c',
-                                border: '1px solid rgba(201, 169, 110, 0.1)',
-                                borderRadius: '12px',
-                                padding: '1.5rem',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center',
-                                flexWrap: 'wrap',
-                                gap: '1.5rem',
-                                transition: 'border-color 0.2s',
-                                '&:hover': { borderColor: 'rgba(201, 169, 110, 0.25)' }
-                            }}>
-                                <div>
-                                    <div style={{ display: 'flex', alignItems: 'baseline', gap: '12px' }}>
-                                        <h3 style={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', fontSize: '1.2rem', margin: '0 0 6px 0', fontWeight: 400 }}>
-                                            {order.customerName}
-                                        </h3>
-                                        <span style={{ fontSize: '11px', color: 'rgba(201, 169, 110, 0.4)', fontWeight: 500 }}>
-                                            #{order.id}
-                                        </span>
-                                    </div>
-                                    <p style={{ color: 'rgba(245, 237, 216, 0.45)', fontSize: '13px', margin: 0, fontWeight: 300 }}>
-                                        {order.customerEmail}
-                                    </p>
-                                </div>
-
-                                <span style={{
-                                    fontSize: '11px',
-                                    fontWeight: 500,
-                                    letterSpacing: '0.08em',
-                                    textTransform: 'uppercase',
-                                    padding: '6px 16px',
-                                    borderRadius: '30px',
-                                    fontFamily: "'DM Sans', sans-serif",
-                                    ...getStatusStyle(order.status)
-                                }}>
-                                    {order.status}
-                                </span>
-                            </Box>
-                        </Grid>
-                    ))}
-                </Grid>
-            )}
-        </Box>
+        <div style={{ fontFamily: "'DM Sans', sans-serif" }}>
+            <style>{styles}</style>
+            <div className="ord-hero">
+                <div className="ord-eyebrow">Admin · Skyddad sida</div>
+                <div className="ord-title">Ordrar</div>
+            </div>
+            <table className="ord-table">
+                <thead>
+                    <tr>
+                        <th>Kund</th>
+                        <th>E-post</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {mockOrders.map((order) => {
+                        const s = statusColor[order.status] || { bg: 'rgba(255,255,255,0.05)', color: '#f5edd8', border: 'rgba(255,255,255,0.2)' }
+                        return (
+                            <tr key={order.id}>
+                                <td>{order.customerName}</td>
+                                <td style={{ color: 'rgba(245,237,216,0.6)' }}>{order.customerEmail}</td>
+                                <td>
+                                    <span className="status-badge" style={{ background: s.bg, color: s.color, borderColor: s.border }}>
+                                        {order.status}
+                                    </span>
+                                </td>
+                            </tr>
+                        )
+                    })}
+                </tbody>
+            </table>
+        </div>
     )
 }
