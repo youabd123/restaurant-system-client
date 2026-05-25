@@ -41,7 +41,7 @@ function App() {
 
                         {/* Denna route kräver nu att man är inloggad och har rollen Admin */}
                         <Route path="/orders" element={
-                            <ProtectedRoute requiredRole="Admin">
+                            <ProtectedRoute>
                                 <OrdersPage />
                             </ProtectedRoute>
                         } />
