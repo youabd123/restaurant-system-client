@@ -8,7 +8,6 @@ import MenuItemsPage from './pages/MenuItemsPage'
 import OrdersPage from './pages/OrdersPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
-import CheckoutPage from './pages/CheckoutPage'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -38,7 +37,6 @@ function App() {
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/categories" element={<CategoriesPage />} />
                         <Route path="/menu-items" element={<MenuItemsPage />} />
-                        <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/orders" element={
                             <ProtectedRoute>
                                 <OrdersPage />
