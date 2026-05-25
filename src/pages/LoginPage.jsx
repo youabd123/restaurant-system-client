@@ -87,7 +87,7 @@ export default function LoginPage() {
                         '&:hover': { backgroundColor: '#c9a96e', transform: 'translateY(-1px)', boxShadow: '0 8px 20px rgba(184, 134, 11, 0.25)' }
                     }}
                 >
-                    Logga in
+                   Logga in
                 </Button>
 
                 <Button
@@ -103,7 +103,7 @@ export default function LoginPage() {
                         '&:hover': { color: '#f5edd8', background: 'none' }
                     }}
                 >
-                    Skapa ett konto hos oss ✦
+                    Skapa ett konto hos oss✦
                 </Button>
             </Box>
         </Box>

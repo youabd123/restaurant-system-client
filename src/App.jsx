@@ -8,12 +8,12 @@ import MenuItemsPage from './pages/MenuItemsPage'
 import OrdersPage from './pages/OrdersPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import CheckoutPage from './pages/CheckoutPage'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
     return (
         <ThemeProvider theme={theme}>
-            {/* Globala CSS-förbättringar för mjuk scroll och snygga scrollbarer */}
             <style>{`
                 html { scroll-behavior: smooth; background-color: #140d06; }
                 body { margin: 0; padding: 0; background-color: #140d06; }
@@ -38,8 +38,7 @@ function App() {
                         <Route path="/register" element={<RegisterPage />} />
                         <Route path="/categories" element={<CategoriesPage />} />
                         <Route path="/menu-items" element={<MenuItemsPage />} />
-
-                        {/* Denna route kräver nu att man är inloggad och har rollen Admin */}
+                        <Route path="/checkout" element={<CheckoutPage />} />
                         <Route path="/orders" element={
                             <ProtectedRoute>
                                 <OrdersPage />
@@ -51,4 +50,5 @@ function App() {
         </ThemeProvider>
     )
 }
+
 export default App

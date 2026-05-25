@@ -122,7 +122,6 @@ function DishRow({ item, open, onToggle }) {
                 <div className="dish-desc">{item.description || 'Tillagad med färska italienska råvaror.'}</div>
                 {open && (
                     <div className="dish-expanded">
-                        <strong style={{ color: '#c9a96e' }}>Kategori:</strong> {item.categoryId}<br />
                         <strong style={{ color: '#c9a96e' }}>Tillgänglig:</strong> {item.isAvailable ? 'Ja' : 'Nej'}
                     </div>
                 )}
