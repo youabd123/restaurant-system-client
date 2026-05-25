@@ -128,7 +128,6 @@ export default function MainLayout({ children }) {
                         ✦ Trattoria ✦
                     </Typography>
                     <Typography variant="caption" sx={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(245, 237, 216, 0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '10px' }}>
-                        Göteborg · Smaker från Toscana sedan 1987
                     </Typography>
                 </Container>
             </Box>
