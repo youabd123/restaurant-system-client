@@ -76,7 +76,7 @@ export default function MainLayout({ children }) {
                                 '&:hover': { opacity: 0.8 }
                             }}
                         >
-                            Trattoria Bella
+                            Trattoria
                         </Typography>
 
                         <Stack direction="row" spacing={1} alignItems="center">
@@ -130,7 +130,7 @@ export default function MainLayout({ children }) {
             <Box component="footer" sx={{ borderTop: '1px solid rgba(201, 169, 110, 0.05)', py: 5, bgcolor: '#0f0a04' }}>
                 <Container maxWidth="md" sx={{ textAlign: 'center' }}>
                     <Typography variant="body2" sx={{ fontFamily: "'Playfair Display', serif", color: '#c9a96e', fontSize: '15px', mb: 1 }}>
-                        ✦ Trattoria Bella ✦
+                        ✦ Trattoria✦
                     </Typography>
                     <Typography variant="caption" sx={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(245, 237, 216, 0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '10px' }}>
                         Göteborg · Smaker från Toscana sedan 1987

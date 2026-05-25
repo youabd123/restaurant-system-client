@@ -32,7 +32,7 @@ export default function HomePage() {
             <Container maxWidth="sm">
                 <Stack spacing={4} alignItems="center" textAlign="center">
                     <div style={{ fontSize: '10px', fontWeight: 500, letterSpacing: '0.4em', textTransform: 'uppercase', color: '#c9a96e', opacity: 0.8 }}>
-                        Ett genuint hantverk
+                        Autentisk italiensk matupplevelse
                     </div>
 
                     <Typography
@@ -40,12 +40,12 @@ export default function HomePage() {
                         fontWeight={400}
                         sx={{
                             fontFamily: "'Playfair Display', serif",
-                            color: '#f5edd8',
+                            color: '#c9a96e',
                             letterSpacing: '1px',
                             fontSize: { xs: '2.5rem', md: '3.5rem' }
                         }}
                     >
-                        Smaka på Toscana
+                        Trattoria
                     </Typography>
 
                     <div style={{ display: 'flex', alignItems: 'center', gap: '16px', width: '100%', justifyContent: 'center', color: '#c9a96e' }}>
@@ -55,7 +55,7 @@ export default function HomePage() {
                     </div>
 
                     <Typography variant="h6" sx={{ color: 'rgba(245,237,216,0.55)', fontFamily: "'DM Sans', sans-serif", fontSize: '15px', fontWeight: 300, lineHeight: 1.7, maxWidth: '460px' }}>
-                        Välkommen till bords. Varje rätt som lämnar vårt kök är ett kärleksbrev till den italienska matkulturen. Logga in för att beställa direkt till ditt bord.
+                        Från Roms gator till ditt bord — tillagat med passion och färska råvaror varje dag.
                     </Typography>
 
                     <Stack direction="row" spacing={2} sx={{ mt: 2 }}>
