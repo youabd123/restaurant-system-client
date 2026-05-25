@@ -1,3 +1,4 @@
+
 const mockOrders = [
     { id: 1, customerName: 'Alessandro Rossi', customerEmail: 'a.rossi@gmail.com', status: 'Completed' },
     { id: 2, customerName: 'Sofia Andersson', customerEmail: 'sofia.a@hotmail.com', status: 'Confirmed' },
