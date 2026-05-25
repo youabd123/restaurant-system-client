@@ -108,7 +108,7 @@ export default function HomePage() {
                                 }
                             }}
                         >
-                            Kategorier
+                           Kategorier
                         </Button>
                     </Stack>
                 </Stack>

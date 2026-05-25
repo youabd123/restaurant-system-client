@@ -54,7 +54,7 @@ export default function LoginPage() {
                     mb={4}
                     sx={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', textAlign: 'center', fontWeight: 400, fontStyle: 'italic' }}
                 >
-                    Signore, Logga in
+                   Logga in
                 </Typography>
 
                 {error && (
