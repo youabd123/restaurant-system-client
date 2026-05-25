@@ -12,9 +12,6 @@ export default function MainLayout({ children }) {
     const { user, logout } = useAuth()
     const navigate = useNavigate()
 
-    // Kollar om den inloggade användaren har rollen Admin
-    const isAdmin = user?.roles?.includes('Admin')
-
     const handleLogout = () => {
         logout()
         navigate('/login')
@@ -83,9 +80,7 @@ export default function MainLayout({ children }) {
                             <Button sx={navButtonStyle} component={Link} to="/">Hem</Button>
                             <Button sx={navButtonStyle} component={Link} to="/categories">Kategorier</Button>
                             <Button sx={navButtonStyle} component={Link} to="/menu-items">Meny</Button>
-
-                            {/* Visar bara länken till orderhanteringen om användaren är en inloggad Admin */}
-                            {isAdmin && <Button sx={navButtonStyle} component={Link} to="/orders">Ordrar</Button>}
+                            {user && <Button sx={navButtonStyle} component={Link} to="/orders">Ordrar</Button>}
 
                             {user ? (
                                 <Button
@@ -130,7 +125,7 @@ export default function MainLayout({ children }) {
             <Box component="footer" sx={{ borderTop: '1px solid rgba(201, 169, 110, 0.05)', py: 5, bgcolor: '#0f0a04' }}>
                 <Container maxWidth="md" sx={{ textAlign: 'center' }}>
                     <Typography variant="body2" sx={{ fontFamily: "'Playfair Display', serif", color: '#c9a96e', fontSize: '15px', mb: 1 }}>
-                        ✦ Trattoria✦
+                        ✦ Trattoria ✦
                     </Typography>
                     <Typography variant="caption" sx={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(245, 237, 216, 0.3)', letterSpacing: '0.1em', textTransform: 'uppercase', fontSize: '10px' }}>
                         Göteborg · Smaker från Toscana sedan 1987
