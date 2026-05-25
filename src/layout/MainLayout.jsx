@@ -1,5 +1,6 @@
-﻿import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { useBasket } from '../context/BasketContext'
 import AppBar from '@mui/material/AppBar'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -10,6 +11,7 @@ import Typography from '@mui/material/Typography'
 
 export default function MainLayout({ children }) {
     const { user, logout } = useAuth()
+    const { totalCount } = useBasket()
     const navigate = useNavigate()
 
     const handleLogout = () => {
@@ -80,6 +82,9 @@ export default function MainLayout({ children }) {
                             <Button sx={navButtonStyle} component={Link} to="/">Hem</Button>
                             <Button sx={navButtonStyle} component={Link} to="/categories">Kategorier</Button>
                             <Button sx={navButtonStyle} component={Link} to="/menu-items">Meny</Button>
+                            <Button sx={navButtonStyle} component={Link} to="/checkout">
+                                Varukorg{totalCount > 0 ? ` (${totalCount})` : ''}
+                            </Button>
                             {user && <Button sx={navButtonStyle} component={Link} to="/orders">Ordrar</Button>}
 
                             {user ? (

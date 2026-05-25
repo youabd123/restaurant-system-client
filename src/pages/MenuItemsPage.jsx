@@ -1,12 +1,15 @@
 import { useState } from 'react'
 import { useMenuItems } from '../hooks/useMenuItems'
 import { useCategories } from '../hooks/useCategories'
+import { useBasket } from '../context/BasketContext'
+import { formatPrice } from '../Helpers/formatPrice'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 
 export default function MenuItemsPage() {
     const { menuItems, loading: loadingItems, error } = useMenuItems()
     const { categories, loading: loadingCats } = useCategories()
+    const { addItem } = useBasket()
     const [activeTab, setActiveTab] = useState('alla')
     const [search, setSearch] = useState('')
     const [openItem, setOpenItem] = useState(null)
@@ -58,6 +61,10 @@ export default function MenuItemsPage() {
         .dish-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 400; color: #f5edd8; }
         .dish-price { font-size: 15px; font-weight: 500; color: #c9a96e; white-space: nowrap; }
         .dish-desc { font-size: 13px; color: rgba(245,237,216,0.55); line-height: 1.5; font-weight: 300; }
+        .dish-actions { display: flex; align-items: center; gap: 12px; margin-top: 0.6rem; }
+        .add-btn { background: #b8860b; color: #140d06; border: none; padding: 0.45rem 0.9rem; border-radius: 999px; font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+        .add-btn:hover { background: #c9a96e; transform: translateY(-1px); }
+        .add-btn:disabled { background: rgba(201,169,110,0.2); color: rgba(245,237,216,0.35); cursor: not-allowed; transform: none; }
         .dish-expanded { background: rgba(255,255,255,0.04); border-radius: 8px; padding: 1rem; margin-top: 0.75rem; font-size: 13px; color: rgba(245,237,216,0.6); border: 0.5px solid rgba(200,169,81,0.15); }
         .dish-arrow { font-size: 11px; color: rgba(245,237,216,0.3); margin-left: auto; flex-shrink: 0; transition: transform 0.2s; }
         .dish-arrow.open { transform: rotate(180deg); }
@@ -94,7 +101,13 @@ export default function MenuItemsPage() {
                             </div>
                             <div>
                                 {cat.items.map(item => (
-                                    <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} />
+                                    <DishRow
+                                        key={item.id}
+                                        item={item}
+                                        open={openItem === item.id}
+                                        onToggle={() => toggleItem(item.id)}
+                                        onAdd={() => addItem(item)}
+                                    />
                                 ))}
                             </div>
                         </div>
@@ -102,7 +115,13 @@ export default function MenuItemsPage() {
                 ) : (
                     <div>
                         {filtered.map(item => (
-                            <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} />
+                            <DishRow
+                                key={item.id}
+                                item={item}
+                                open={openItem === item.id}
+                                onToggle={() => toggleItem(item.id)}
+                                onAdd={() => addItem(item)}
+                            />
                         ))}
                     </div>
                 )}
@@ -111,18 +130,31 @@ export default function MenuItemsPage() {
     )
 }
 
-function DishRow({ item, open, onToggle }) {
+function DishRow({ item, open, onToggle, onAdd }) {
+    const isAvailable = item.isAvailable !== false
     return (
         <div className="dish-row" onClick={onToggle}>
             <div className="dish-content">
                 <div className="dish-header">
                     <span className="dish-name">{item.name}</span>
-                    <span className="dish-price">{Number(item.price).toFixed(2)} kr</span>
+                    <span className="dish-price">{formatPrice(item.price)}</span>
                 </div>
                 <div className="dish-desc">{item.description || 'Tillagad med färska italienska råvaror.'}</div>
+                <div className="dish-actions">
+                    <button
+                        className="add-btn"
+                        onClick={(event) => {
+                            event.stopPropagation()
+                            onAdd()
+                        }}
+                        disabled={!isAvailable}
+                    >
+                        {isAvailable ? 'Lägg i varukorg' : 'Ej tillgänglig'}
+                    </button>
+                </div>
                 {open && (
                     <div className="dish-expanded">
-                        <strong style={{ color: '#c9a96e' }}>Tillgänglig:</strong> {item.isAvailable ? 'Ja' : 'Nej'}
+                        <strong style={{ color: '#c9a96e' }}>Tillgänglig:</strong> {isAvailable ? 'Ja' : 'Nej'}
                     </div>
                 )}
             </div>
