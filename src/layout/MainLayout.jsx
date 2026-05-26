@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react'
 import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useBasket } from '../context/BasketContext'
@@ -11,6 +12,23 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Grid from '@mui/material/Grid'
 import BookingModal from '../components/BookingModal'
+
+function checkIsOpen() {
+    const now = new Date()
+    const day = now.getDay()
+    const time = now.getHours() * 60 + now.getMinutes()
+    const isWeekend = day === 0 || day === 6
+    return isWeekend ? (time >= 720 && time < 1380) : (time >= 660 && time < 1320)
+}
+
+function useIsOpen() {
+    const [isOpen, setIsOpen] = useState(checkIsOpen)
+    useEffect(() => {
+        const id = setInterval(() => setIsOpen(checkIsOpen()), 60000)
+        return () => clearInterval(id)
+    }, [])
+    return isOpen
+}
 
 const InstagramSvg = () => (
     <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor">
@@ -62,6 +80,7 @@ export default function MainLayout({ children }) {
         },
     })
 
+    const isOpen = useIsOpen()
     const displayName = user?.fullName || user?.email?.split('@')[0] || null
 
     return (
@@ -79,22 +98,39 @@ export default function MainLayout({ children }) {
             >
                 <Container maxWidth="lg">
                     <Toolbar disableGutters sx={{ justifyContent: 'space-between', height: '70px' }}>
-                        <Typography
-                            variant="h6"
-                            component={Link}
-                            to="/"
-                            sx={{
-                                color: '#f5edd8',
-                                fontFamily: "'Playfair Display', serif",
-                                fontWeight: 400,
-                                fontStyle: 'italic',
-                                textDecoration: 'none',
-                                letterSpacing: '1px',
-                                '&:hover': { opacity: 0.8 },
-                            }}
-                        >
-                            Trattoria
-                        </Typography>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                            <Typography
+                                variant="h6"
+                                component={Link}
+                                to="/"
+                                sx={{
+                                    color: '#f5edd8',
+                                    fontFamily: "'Playfair Display', serif",
+                                    fontWeight: 400,
+                                    fontStyle: 'italic',
+                                    textDecoration: 'none',
+                                    letterSpacing: '1px',
+                                    '&:hover': { opacity: 0.8 },
+                                }}
+                            >
+                                Trattoria
+                            </Typography>
+                            <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.6 }}>
+                                <Box sx={{
+                                    width: 7, height: 7, borderRadius: '50%',
+                                    bgcolor: isOpen ? '#5db85d' : '#e08080',
+                                    boxShadow: isOpen ? '0 0 6px rgba(93,184,93,0.7)' : '0 0 6px rgba(224,128,128,0.7)',
+                                }} />
+                                <Typography sx={{
+                                    fontSize: '11px',
+                                    color: isOpen ? '#7ec87e' : '#e08080',
+                                    fontFamily: "'DM Sans', sans-serif",
+                                    fontWeight: 400,
+                                }}>
+                                    {isOpen ? 'Öppet nu' : 'Stängt'}
+                                </Typography>
+                            </Box>
+                        </Box>
 
                         <Stack direction="row" spacing={0.5} alignItems="center">
                             <Button sx={navBtn('/')} component={Link} to="/">Hem</Button>
