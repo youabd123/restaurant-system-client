@@ -12,6 +12,7 @@ export default function MenuItemsPage() {
     const { addItem } = useBasket()
     const [activeTab, setActiveTab] = useState('alla')
     const [search, setSearch] = useState('')
+    const [sort, setSort] = useState('default')
     const [openItem, setOpenItem] = useState(null)
 
     if (loadingItems || loadingCats) return (
@@ -25,11 +26,15 @@ export default function MenuItemsPage() {
         </Box>
     )
 
-    const filtered = menuItems.filter(item => {
+    let filtered = menuItems.filter(item => {
         const matchTab = activeTab === 'alla' || item.categoryId === activeTab
         const matchSearch = !search || item.name.toLowerCase().includes(search.toLowerCase()) || item.description?.toLowerCase().includes(search.toLowerCase())
         return matchTab && matchSearch
     })
+
+    if (sort === 'price-asc') filtered = [...filtered].sort((a, b) => a.price - b.price)
+    if (sort === 'price-desc') filtered = [...filtered].sort((a, b) => b.price - a.price)
+    if (sort === 'name') filtered = [...filtered].sort((a, b) => a.name.localeCompare(b.name))
 
     const grouped = categories.map(cat => ({
         ...cat,
@@ -37,8 +42,6 @@ export default function MenuItemsPage() {
     })).filter(cat => cat.items.length > 0)
 
     const toggleItem = (id) => setOpenItem(openItem === id ? null : id)
-
-    const categoryName = (id) => categories.find(c => c.id === id)?.name ?? ''
 
     const styles = `
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
@@ -48,38 +51,39 @@ export default function MenuItemsPage() {
         .hero-title { font-family: 'Playfair Display', serif; font-size: 3rem; font-weight: 400; font-style: italic; color: #f5edd8; margin-bottom: 0.5rem; }
         .hero-sub { font-size: 14px; color: rgba(245,237,216,0.5); font-weight: 300; }
         .hero-divider { display: flex; align-items: center; gap: 12px; justify-content: center; margin: 1.25rem 0; color: #c9a96e; font-size: 10px; opacity: 0.6; }
-        .hero-divider::before, .hero-divider::after { content: ''; width: 55px; height: 0.5px; background: #c9a96e; opacity: 0.5; }
+        .hero-divider::before, .hero-divider::after { content: ''; width: 50px; height: 0.5px; background: #c9a96e; opacity: 0.5; }
         .menu-body { max-width: 720px; margin: 0 auto; padding: 0 1.5rem 3rem; }
-        .menu-tabs { display: flex; gap: 0; overflow-x: auto; border-bottom: 0.5px solid rgba(200,169,81,0.2); margin-bottom: 2rem; padding-top: 1.5rem; scrollbar-width: none; }
+        .menu-tabs { display: flex; gap: 0; overflow-x: auto; border-bottom: 0.5px solid rgba(200,169,81,0.2); margin-bottom: 1.25rem; padding-top: 1.5rem; scrollbar-width: none; }
         .menu-tabs::-webkit-scrollbar { display: none; }
-        .menu-tab { background: none; border: none; cursor: pointer; padding: 0.6rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; color: rgba(245,237,216,0.45); white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
+        .menu-tab { background: none; border: none; cursor: pointer; padding: 0.6rem 1.25rem; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 400; color: rgba(245,237,216,0.5); white-space: nowrap; border-bottom: 2px solid transparent; transition: all 0.2s; }
         .menu-tab.active { color: #c9a96e; border-bottom: 2px solid #c9a96e; font-weight: 500; }
-        .menu-tab:hover:not(.active) { color: rgba(245,237,216,0.8); }
-        .search-row { display: flex; gap: 10px; margin-bottom: 1.5rem; }
-        .search-input { flex: 1; background: rgba(255,255,255,0.03); border: 0.5px solid rgba(200,169,81,0.2); border-radius: 8px; padding: 0.55rem 0.85rem; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f5edd8; outline: none; transition: border-color 0.2s; }
-        .search-input::placeholder { color: rgba(245,237,216,0.25); }
-        .search-input:focus { border-color: rgba(200,169,81,0.5); }
-        .section-title { font-family: 'Playfair Display', serif; font-size: 1.45rem; font-weight: 400; font-style: italic; color: #f5edd8; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid rgba(200,169,81,0.15); display: flex; align-items: baseline; gap: 10px; }
-        .section-count { font-family: 'DM Sans', sans-serif; font-size: 11px; font-style: normal; color: rgba(245,237,216,0.35); font-weight: 400; }
-        .dish-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem 0.5rem; border-bottom: 0.5px solid rgba(200,169,81,0.08); cursor: pointer; transition: background 0.15s; border-radius: 6px; margin: 0 -0.5rem; }
+        .menu-tab:hover:not(.active) { color: #f5edd8; }
+        .controls-row { display: flex; gap: 10px; margin-bottom: 1.5rem; align-items: center; }
+        .search-input { flex: 1; background: rgba(255,255,255,0.05); border: 0.5px solid rgba(200,169,81,0.25); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 13px; color: #f5edd8; outline: none; }
+        .search-input::placeholder { color: rgba(245,237,216,0.3); }
+        .search-input:focus { border-color: #c9a96e; }
+        .sort-select { background: rgba(255,255,255,0.05); border: 0.5px solid rgba(200,169,81,0.25); border-radius: 8px; padding: 0.5rem 0.75rem; font-family: 'DM Sans', sans-serif; font-size: 13px; color: rgba(245,237,216,0.7); outline: none; cursor: pointer; }
+        .sort-select option { background: #1a1208; color: #f5edd8; }
+        .sort-select:focus { border-color: #c9a96e; }
+        .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; font-style: italic; color: #f5edd8; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid rgba(200,169,81,0.2); display: flex; align-items: baseline; gap: 10px; }
+        .section-count { font-family: 'DM Sans', sans-serif; font-size: 12px; font-style: normal; color: rgba(245,237,216,0.4); font-weight: 400; }
+        .dish-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem 0; border-bottom: 0.5px solid rgba(200,169,81,0.1); cursor: pointer; transition: background 0.15s; border-radius: 4px; }
+        .dish-row.unavailable { opacity: 0.45; }
         .dish-row:last-child { border-bottom: none; }
-        .dish-row:hover { background: rgba(200,169,81,0.04); }
+        .dish-row:hover { background: rgba(200,169,81,0.05); }
         .dish-content { flex: 1; min-width: 0; }
-        .dish-header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 5px; }
+        .dish-header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 4px; }
         .dish-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 400; color: #f5edd8; }
         .dish-price { font-size: 15px; font-weight: 500; color: #c9a96e; white-space: nowrap; }
-        .dish-desc { font-size: 13px; color: rgba(245,237,216,0.5); line-height: 1.55; font-weight: 300; }
-        .dish-meta { display: flex; align-items: center; gap: 10px; margin-top: 0.65rem; }
-        .add-btn { background: #b8860b; color: #140d06; border: none; padding: 0.45rem 1rem; border-radius: 999px; font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
+        .dish-desc { font-size: 13px; color: rgba(245,237,216,0.55); line-height: 1.5; font-weight: 300; }
+        .dish-actions { display: flex; align-items: center; gap: 10px; margin-top: 0.6rem; }
+        .add-btn { background: #b8860b; color: #140d06; border: none; padding: 0.45rem 0.9rem; border-radius: 999px; font-size: 12px; font-weight: 500; font-family: 'DM Sans', sans-serif; cursor: pointer; transition: all 0.2s; }
         .add-btn:hover { background: #c9a96e; transform: translateY(-1px); }
-        .add-btn:disabled { background: rgba(201,169,110,0.15); color: rgba(245,237,216,0.3); cursor: not-allowed; transform: none; }
-        .unavailable-badge { display: inline-block; font-size: 10px; color: rgba(240,149,149,0.7); border: 0.5px solid rgba(240,149,149,0.25); border-radius: 999px; padding: 2px 8px; }
-        .dish-expanded { background: rgba(255,255,255,0.025); border-radius: 8px; padding: 1rem 1.1rem; margin-top: 0.85rem; border: 0.5px solid rgba(200,169,81,0.12); }
-        .expanded-row { display: flex; justify-content: space-between; font-size: 12px; color: rgba(245,237,216,0.5); padding: 0.25rem 0; }
-        .expanded-label { color: rgba(245,237,216,0.35); }
-        .dish-arrow { font-size: 10px; color: rgba(245,237,216,0.25); margin-left: auto; flex-shrink: 0; transition: transform 0.2s; padding-top: 4px; }
-        .dish-arrow.open { transform: rotate(180deg); color: rgba(201,169,110,0.6); }
-        .empty-state { text-align: center; padding: 3rem 1rem; color: rgba(245,237,216,0.35); font-size: 14px; }
+        .add-btn:disabled { background: rgba(100,100,100,0.2); color: rgba(245,237,216,0.3); cursor: not-allowed; transform: none; border: 0.5px solid rgba(255,255,255,0.08); }
+        .unavail-tag { font-size: 10px; color: rgba(245,237,216,0.3); letter-spacing: 0.05em; border: 0.5px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 2px 8px; }
+        .dish-arrow { font-size: 11px; color: rgba(245,237,216,0.3); margin-left: auto; flex-shrink: 0; transition: transform 0.2s; }
+        .dish-arrow.open { transform: rotate(180deg); }
+        .empty-state { text-align: center; padding: 3rem 1rem; color: rgba(245,237,216,0.4); font-size: 14px; }
     `
 
     return (
@@ -97,114 +101,73 @@ export default function MenuItemsPage() {
                         Alla rätter
                     </button>
                     {categories.map(cat => (
-                        <button
-                            key={cat.id}
-                            className={`menu-tab ${activeTab === cat.id ? 'active' : ''}`}
-                            onClick={() => setActiveTab(cat.id)}
-                        >
+                        <button key={cat.id} className={`menu-tab ${activeTab === cat.id ? 'active' : ''}`} onClick={() => setActiveTab(cat.id)}>
                             {cat.name}
                         </button>
                     ))}
                 </div>
 
-                <div className="search-row">
+                <div className="controls-row">
                     <input
                         className="search-input"
                         type="text"
-                        placeholder="Sök rätt eller beskrivning..."
+                        placeholder="Sök rätt..."
                         value={search}
-                        onChange={(e) => setSearch(e.target.value)}
+                        onChange={e => setSearch(e.target.value)}
                     />
+                    <select className="sort-select" value={sort} onChange={e => setSort(e.target.value)}>
+                        <option value="default">Sortera</option>
+                        <option value="price-asc">Pris: Lågt → Högt</option>
+                        <option value="price-desc">Pris: Högt → Lågt</option>
+                        <option value="name">Alfabetisk</option>
+                    </select>
                 </div>
 
-                {filtered.length === 0 && (
-                    <div className="empty-state">Inga rätter matchar din sökning.</div>
-                )}
+                {filtered.length === 0 && <div className="empty-state">Inga rätter matchar din sökning.</div>}
 
                 {activeTab === 'alla' ? (
                     grouped.map(cat => (
                         <div key={cat.id} style={{ marginBottom: '2.5rem' }}>
                             <div className="section-title">
-                                {cat.name}
-                                <span className="section-count">{cat.items.length} rätter</span>
+                                {cat.name} <span className="section-count">{cat.items.length} rätter</span>
                             </div>
-                            <div>
-                                {cat.items.map(item => (
-                                    <DishRow
-                                        key={item.id}
-                                        item={item}
-                                        categoryName={categoryName(item.categoryId)}
-                                        open={openItem === item.id}
-                                        onToggle={() => toggleItem(item.id)}
-                                        onAdd={() => addItem(item)}
-                                    />
-                                ))}
-                            </div>
+                            {cat.items.map(item => (
+                                <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
+                            ))}
                         </div>
                     ))
                 ) : (
-                    <div>
-                        {filtered.map(item => (
-                            <DishRow
-                                key={item.id}
-                                item={item}
-                                categoryName={categoryName(item.categoryId)}
-                                open={openItem === item.id}
-                                onToggle={() => toggleItem(item.id)}
-                                onAdd={() => addItem(item)}
-                            />
-                        ))}
-                    </div>
+                    filtered.map(item => (
+                        <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
+                    ))
                 )}
             </div>
         </div>
     )
 }
 
-function DishRow({ item, categoryName, open, onToggle, onAdd }) {
+function DishRow({ item, open, onToggle, onAdd }) {
     const isAvailable = item.isAvailable !== false
     return (
-        <div className="dish-row" onClick={onToggle}>
+        <div className={`dish-row${isAvailable ? '' : ' unavailable'}`} onClick={onToggle}>
             <div className="dish-content">
                 <div className="dish-header">
                     <span className="dish-name">{item.name}</span>
                     <span className="dish-price">{formatPrice(item.price)}</span>
                 </div>
-                <div className="dish-desc">
-                    {item.description || 'Tillagad med färska italienska råvaror.'}
+                <div className="dish-desc">{item.description || 'Tillagad med färska italienska råvaror.'}</div>
+                <div className="dish-actions">
+                    <button
+                        className="add-btn"
+                        onClick={e => { e.stopPropagation(); if (isAvailable) onAdd() }}
+                        disabled={!isAvailable}
+                    >
+                        {isAvailable ? 'Lägg i varukorg' : 'Ej tillgänglig'}
+                    </button>
+                    {!isAvailable && <span className="unavail-tag">Tillfälligt slut</span>}
                 </div>
-                <div className="dish-meta">
-                    {isAvailable ? (
-                        <button
-                            className="add-btn"
-                            onClick={(e) => { e.stopPropagation(); onAdd() }}
-                        >
-                            Lägg i varukorg
-                        </button>
-                    ) : (
-                        <span className="unavailable-badge">Ej tillgänglig</span>
-                    )}
-                </div>
-                {open && (
-                    <div className="dish-expanded">
-                        <div className="expanded-row">
-                            <span className="expanded-label">Kategori</span>
-                            <span>{categoryName || '—'}</span>
-                        </div>
-                        <div className="expanded-row">
-                            <span className="expanded-label">Pris</span>
-                            <span style={{ color: '#c9a96e' }}>{formatPrice(item.price)}</span>
-                        </div>
-                        <div className="expanded-row">
-                            <span className="expanded-label">Status</span>
-                            <span style={{ color: isAvailable ? '#7ec87e' : '#f09595' }}>
-                                {isAvailable ? 'Tillgänglig' : 'Ej tillgänglig'}
-                            </span>
-                        </div>
-                    </div>
-                )}
             </div>
-            <span className={`dish-arrow ${open ? 'open' : ''}`}>▼</span>
+            <span className={`dish-arrow${open ? ' open' : ''}`}>▼</span>
         </div>
     )
 }

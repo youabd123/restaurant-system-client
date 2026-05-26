@@ -1,4 +1,4 @@
-import { useNavigate, Link } from 'react-router-dom'
+import { useNavigate, Link, useLocation } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { useBasket } from '../context/BasketContext'
 import AppBar from '@mui/material/AppBar'
@@ -13,17 +13,18 @@ export default function MainLayout({ children }) {
     const { user, logout } = useAuth()
     const { totalCount } = useBasket()
     const navigate = useNavigate()
+    const location = useLocation()
 
     const handleLogout = () => {
         logout()
         navigate('/login')
     }
 
-    const navButtonStyle = {
-        color: 'rgba(245, 237, 216, 0.7)',
+    const navBtn = (to) => ({
+        color: location.pathname === to ? '#c9a96e' : 'rgba(245, 237, 216, 0.7)',
         fontFamily: "'DM Sans', sans-serif",
         fontSize: '13px',
-        fontWeight: 400,
+        fontWeight: location.pathname === to ? 500 : 400,
         textTransform: 'none',
         position: 'relative',
         transition: 'all 0.3s ease',
@@ -32,18 +33,20 @@ export default function MainLayout({ children }) {
             position: 'absolute',
             bottom: '4px',
             left: '50%',
-            width: '0%',
+            width: location.pathname === to ? '60%' : '0%',
             height: '1px',
             backgroundColor: '#c9a96e',
             transition: 'all 0.3s ease',
-            transform: 'translateX(-50%)'
+            transform: 'translateX(-50%)',
         },
         '&:hover': {
             color: '#c9a96e',
             backgroundColor: 'transparent',
-            '&::after': { width: '60%' }
-        }
-    }
+            '&::after': { width: '60%' },
+        },
+    })
+
+    const displayName = user?.fullName || user?.email?.split('@')[0] || null
 
     return (
         <Box sx={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', bgcolor: '#140d06' }}>
@@ -55,7 +58,7 @@ export default function MainLayout({ children }) {
                     backdropFilter: 'blur(20px)',
                     borderBottom: '1px solid rgba(201, 169, 110, 0.1)',
                     top: 0,
-                    zIndex: 1100
+                    zIndex: 1100,
                 }}
             >
                 <Container maxWidth="lg">
@@ -71,48 +74,63 @@ export default function MainLayout({ children }) {
                                 fontStyle: 'italic',
                                 textDecoration: 'none',
                                 letterSpacing: '1px',
-                                transition: 'opacity 0.2s',
-                                '&:hover': { opacity: 0.8 }
+                                '&:hover': { opacity: 0.8 },
                             }}
                         >
                             Trattoria
                         </Typography>
 
                         <Stack direction="row" spacing={1} alignItems="center">
-                            <Button sx={navButtonStyle} component={Link} to="/">Hem</Button>
-                            <Button sx={navButtonStyle} component={Link} to="/categories">Kategorier</Button>
-                            <Button sx={navButtonStyle} component={Link} to="/menu-items">Meny</Button>
-                            <Button sx={navButtonStyle} component={Link} to="/checkout">
+                            <Button sx={navBtn('/')} component={Link} to="/">Hem</Button>
+                            <Button sx={navBtn('/categories')} component={Link} to="/categories">Kategorier</Button>
+                            <Button sx={navBtn('/menu-items')} component={Link} to="/menu-items">Meny</Button>
+                            <Button sx={navBtn('/checkout')} component={Link} to="/checkout">
                                 Varukorg{totalCount > 0 ? ` (${totalCount})` : ''}
                             </Button>
-                            {user && <Button sx={navButtonStyle} component={Link} to="/orders">Ordrar</Button>}
+                            {user && <Button sx={navBtn('/orders')} component={Link} to="/orders">Ordrar</Button>}
 
                             {user ? (
-                                <Button
-                                    onClick={handleLogout}
-                                    sx={{
-                                        ...navButtonStyle,
-                                        color: '#f09595',
-                                        '&::after': { backgroundColor: '#f09595' },
-                                        '&:hover': { color: '#ffb3b3' }
-                                    }}
-                                >
-                                    Logga ut
-                                </Button>
+                                <Stack direction="row" alignItems="center" spacing={1}>
+                                    {displayName && (
+                                        <Typography sx={{
+                                            fontSize: '12px',
+                                            color: 'rgba(201,169,110,0.7)',
+                                            fontFamily: "'DM Sans', sans-serif",
+                                            borderLeft: '0.5px solid rgba(201,169,110,0.2)',
+                                            paddingLeft: '12px',
+                                        }}>
+                                            {displayName}
+                                        </Typography>
+                                    )}
+                                    <Button
+                                        onClick={handleLogout}
+                                        sx={{
+                                            color: '#f09595',
+                                            fontFamily: "'DM Sans', sans-serif",
+                                            fontSize: '13px',
+                                            textTransform: 'none',
+                                            fontWeight: 400,
+                                            '&:hover': { color: '#ffb3b3', backgroundColor: 'transparent' },
+                                        }}
+                                    >
+                                        Logga ut
+                                    </Button>
+                                </Stack>
                             ) : (
                                 <Button
                                     component={Link}
                                     to="/login"
                                     sx={{
-                                        ...navButtonStyle,
                                         color: '#c9a96e',
+                                        fontFamily: "'DM Sans', sans-serif",
+                                        fontSize: '13px',
                                         fontWeight: 500,
+                                        textTransform: 'none',
                                         border: '1px solid rgba(201,169,110,0.3)',
                                         borderRadius: '6px',
                                         px: 2,
                                         py: 0.5,
                                         '&:hover': { border: '1px solid #c9a96e', backgroundColor: 'rgba(201,169,110,0.05)' },
-                                        '&::after': { display: 'none' }
                                     }}
                                 >
                                     Logga in

@@ -9,6 +9,7 @@ import OrdersPage from './pages/OrdersPage'
 import CheckoutPage from './pages/CheckoutPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
+import NotFoundPage from './pages/NotFoundPage'
 import ProtectedRoute from './components/ProtectedRoute'
 
 function App() {
@@ -29,7 +30,7 @@ function App() {
                 color: '#f5edd8',
                 fontFamily: "'DM Sans', sans-serif",
                 display: 'flex',
-                flexDirection: 'column'
+                flexDirection: 'column',
             }}>
                 <MainLayout>
                     <Routes>
@@ -44,6 +45,7 @@ function App() {
                                 <OrdersPage />
                             </ProtectedRoute>
                         } />
+                        <Route path="*" element={<NotFoundPage />} />
                     </Routes>
                 </MainLayout>
             </div>
