@@ -67,6 +67,31 @@ export default function OrdersPage() {
         ? orders
         : orders.filter(o => o.status === statusFilter)
 
+    if (!user) return (
+        <div style={{ fontFamily: "'DM Sans', sans-serif", textAlign: 'center', padding: '6rem 2rem' }}>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: '#c9a96e', fontSize: '3rem', opacity: 0.3, marginBottom: '1.5rem' }}>✦</div>
+            <div style={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', fontSize: '1.8rem', fontStyle: 'italic', marginBottom: '0.75rem' }}>
+                Logga in för att fortsätta
+            </div>
+            <div style={{ color: 'rgba(245,237,216,0.45)', fontFamily: "'DM Sans', sans-serif", fontSize: '14px', fontWeight: 300, marginBottom: '2rem', lineHeight: 1.7 }}>
+                Du behöver logga in för att se dina ordrar
+            </div>
+            <Link to="/login" style={{ textDecoration: 'none' }}>
+                <button style={{
+                    background: '#b8860b', color: '#140d06', border: 'none',
+                    padding: '0.7rem 2rem', borderRadius: '999px',
+                    fontSize: '14px', fontWeight: 500, fontFamily: "'DM Sans', sans-serif",
+                    cursor: 'pointer', transition: 'background 0.2s',
+                }}
+                    onMouseEnter={e => e.target.style.background = '#c9a96e'}
+                    onMouseLeave={e => e.target.style.background = '#b8860b'}
+                >
+                    Logga in
+                </button>
+            </Link>
+        </div>
+    )
+
     if (loading) return (
         <Box display="flex" justifyContent="center" mt={8}>
             <CircularProgress sx={{ color: '#c9a96e' }} />

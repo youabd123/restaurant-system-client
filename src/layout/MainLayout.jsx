@@ -166,16 +166,19 @@ export default function MainLayout({ children }) {
                             {user ? (
                                 <Stack direction="row" alignItems="center" spacing={1}>
                                     {displayName && (
-                                        <Typography sx={{
-                                            fontSize: '12px',
-                                            color: 'rgba(201,169,110,0.7)',
-                                            fontFamily: "'DM Sans', sans-serif",
-                                            borderLeft: '0.5px solid rgba(201,169,110,0.2)',
-                                            paddingLeft: '12px',
-                                            ml: 1,
-                                        }}>
+                                        <Button
+                                            component={Link}
+                                            to="/profile"
+                                            sx={{
+                                                ...navBtn('/profile'),
+                                                borderLeft: '0.5px solid rgba(201,169,110,0.2)',
+                                                paddingLeft: '12px',
+                                                ml: 1,
+                                                minWidth: 'auto',
+                                            }}
+                                        >
                                             {displayName}
-                                        </Typography>
+                                        </Button>
                                     )}
                                     <Button
                                         onClick={handleLogout}

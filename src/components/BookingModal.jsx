@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useBooking } from '../context/BookingContext'
 import Dialog from '@mui/material/Dialog'
 import DialogTitle from '@mui/material/DialogTitle'
@@ -32,6 +32,14 @@ export default function BookingModal() {
     const { open, closeModal } = useBooking()
     const [form, setForm] = useState({ name: '', email: '', date: '', time: '', guests: '2' })
     const [submitted, setSubmitted] = useState(false)
+
+    useEffect(() => {
+        const handleKeyDown = (e) => {
+            if (e.key === 'Escape') closeModal()
+        }
+        if (open) window.addEventListener('keydown', handleKeyDown)
+        return () => window.removeEventListener('keydown', handleKeyDown)
+    }, [open, closeModal])
 
     const handleChange = (e) => setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
 
