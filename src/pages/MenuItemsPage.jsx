@@ -6,6 +6,21 @@ import { formatPrice } from '../Helpers/formatPrice'
 import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 
+const CHEFS_PICKS = ['carbonara', 'risotto', 'bistecca', 'branzino', 'tiramis', 'tagliata', 'ossobuco', 'parmigiana', 'lasagne', 'cacio e pepe']
+
+function isChefsPick(name = '') {
+    return CHEFS_PICKS.some(k => name.toLowerCase().includes(k))
+}
+
+function getAllergens(name = '', description = '') {
+    const text = (name + ' ' + (description || '')).toLowerCase()
+    const allergens = []
+    if (/pasta|pizza|spaghetti|penne|rigatoni|tagliatelle|fettuccine|lasagne|gnocchi|ravioli|tortellini|pappardelle|linguine|bruschetta|focaccia|tiramis|cannoli|calzone|carbonara/.test(text)) allergens.push('G')
+    if (/carbonara|panna|crema|mozzarella|parmesan|ricotta|formaggi|burro|besciamella|tiramis|risotto|cream|mascarpone/.test(text)) allergens.push('L')
+    if (/\bvegan\b|vegansk/.test(text)) allergens.push('V')
+    return allergens
+}
+
 export default function MenuItemsPage() {
     const { menuItems, loading: loadingItems, error } = useMenuItems()
     const { categories, loading: loadingCats } = useCategories()
@@ -72,8 +87,15 @@ export default function MenuItemsPage() {
         .dish-row:last-child { border-bottom: none; }
         .dish-row:hover { background: rgba(200,169,81,0.05); }
         .dish-content { flex: 1; min-width: 0; }
-        .dish-header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 4px; }
+        .dish-header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 4px; flex-wrap: wrap; }
+        .dish-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
         .dish-name { font-family: 'Playfair Display', serif; font-size: 1.05rem; font-weight: 400; color: #f5edd8; }
+        .chefs-badge { font-family: 'DM Sans', sans-serif; font-size: 10px; font-weight: 500; background: rgba(201,169,110,0.15); color: #c9a96e; border: 0.5px solid rgba(201,169,110,0.35); border-radius: 10px; padding: 2px 7px; letter-spacing: 0.03em; white-space: nowrap; }
+        .allergen-badges { display: flex; gap: 3px; align-items: center; margin-left: 2px; }
+        .allergen-badge { font-family: 'DM Sans', sans-serif; font-size: 9px; font-weight: 600; border-radius: 3px; padding: 1px 4px; line-height: 1.4; }
+        .allergen-badge.G { background: rgba(210,140,60,0.15); color: rgba(210,140,60,0.75); border: 0.5px solid rgba(210,140,60,0.3); }
+        .allergen-badge.L { background: rgba(100,160,210,0.12); color: rgba(100,160,210,0.7); border: 0.5px solid rgba(100,160,210,0.25); }
+        .allergen-badge.V { background: rgba(100,180,100,0.12); color: rgba(100,200,100,0.7); border: 0.5px solid rgba(100,180,100,0.25); }
         .dish-price { font-size: 15px; font-weight: 500; color: #c9a96e; white-space: nowrap; }
         .dish-desc { font-size: 13px; color: rgba(245,237,216,0.55); line-height: 1.5; font-weight: 300; }
         .dish-actions { display: flex; align-items: center; gap: 10px; margin-top: 0.6rem; }
@@ -84,6 +106,8 @@ export default function MenuItemsPage() {
         .dish-arrow { font-size: 11px; color: rgba(245,237,216,0.3); margin-left: auto; flex-shrink: 0; transition: transform 0.2s; }
         .dish-arrow.open { transform: rotate(180deg); }
         .empty-state { text-align: center; padding: 3rem 1rem; color: rgba(245,237,216,0.4); font-size: 14px; }
+        .allergen-legend { font-family: 'DM Sans', sans-serif; font-size: 11px; color: rgba(245,237,216,0.3); display: flex; gap: 12px; margin-bottom: 1.25rem; flex-wrap: wrap; }
+        .allergen-legend span { display: flex; align-items: center; gap: 4px; }
     `
 
     return (
@@ -123,6 +147,12 @@ export default function MenuItemsPage() {
                     </select>
                 </div>
 
+                <div className="allergen-legend">
+                    <span><span className="allergen-badge G">G</span> Gluten</span>
+                    <span><span className="allergen-badge L">L</span> Laktos</span>
+                    <span><span className="allergen-badge V">V</span> Vegan</span>
+                </div>
+
                 {filtered.length === 0 && <div className="empty-state">Inga rätter matchar din sökning.</div>}
 
                 {activeTab === 'alla' ? (
@@ -148,11 +178,22 @@ export default function MenuItemsPage() {
 
 function DishRow({ item, open, onToggle, onAdd }) {
     const isAvailable = item.isAvailable !== false
+    const chefsPick = isChefsPick(item.name)
+    const allergens = getAllergens(item.name, item.description)
+
     return (
         <div className={`dish-row${isAvailable ? '' : ' unavailable'}`} onClick={onToggle}>
             <div className="dish-content">
                 <div className="dish-header">
-                    <span className="dish-name">{item.name}</span>
+                    <div className="dish-name-row">
+                        <span className="dish-name">{item.name}</span>
+                        {chefsPick && <span className="chefs-badge">✦ Kockens val</span>}
+                        {allergens.length > 0 && (
+                            <span className="allergen-badges">
+                                {allergens.map(a => <span key={a} className={`allergen-badge ${a}`}>{a}</span>)}
+                            </span>
+                        )}
+                    </div>
                     <span className="dish-price">{formatPrice(item.price)}</span>
                 </div>
                 <div className="dish-desc">{item.description || 'Tillagad med färska italienska råvaror.'}</div>

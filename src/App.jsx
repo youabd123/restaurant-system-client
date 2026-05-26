@@ -3,6 +3,8 @@ import { ThemeProvider } from '@mui/material/styles'
 import { theme } from './theme'
 import MainLayout from './layout/MainLayout'
 import HomePage from './pages/HomePage'
+import AboutPage from './pages/AboutPage'
+import ContactPage from './pages/ContactPage'
 import CategoriesPage from './pages/CategoriesPage'
 import MenuItemsPage from './pages/MenuItemsPage'
 import OrdersPage from './pages/OrdersPage'
@@ -11,6 +13,8 @@ import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import NotFoundPage from './pages/NotFoundPage'
 import ProtectedRoute from './components/ProtectedRoute'
+import ScrollToTopButton from './components/ScrollToTopButton'
+import { BookingProvider } from './context/BookingContext'
 
 function App() {
     return (
@@ -32,22 +36,27 @@ function App() {
                 display: 'flex',
                 flexDirection: 'column',
             }}>
-                <MainLayout>
-                    <Routes>
-                        <Route path="/" element={<HomePage />} />
-                        <Route path="/login" element={<LoginPage />} />
-                        <Route path="/register" element={<RegisterPage />} />
-                        <Route path="/categories" element={<CategoriesPage />} />
-                        <Route path="/menu-items" element={<MenuItemsPage />} />
-                        <Route path="/checkout" element={<CheckoutPage />} />
-                        <Route path="/orders" element={
-                            <ProtectedRoute>
-                                <OrdersPage />
-                            </ProtectedRoute>
-                        } />
-                        <Route path="*" element={<NotFoundPage />} />
-                    </Routes>
-                </MainLayout>
+                <BookingProvider>
+                    <MainLayout>
+                        <Routes>
+                            <Route path="/" element={<HomePage />} />
+                            <Route path="/about" element={<AboutPage />} />
+                            <Route path="/contact" element={<ContactPage />} />
+                            <Route path="/login" element={<LoginPage />} />
+                            <Route path="/register" element={<RegisterPage />} />
+                            <Route path="/categories" element={<CategoriesPage />} />
+                            <Route path="/menu-items" element={<MenuItemsPage />} />
+                            <Route path="/checkout" element={<CheckoutPage />} />
+                            <Route path="/orders" element={
+                                <ProtectedRoute>
+                                    <OrdersPage />
+                                </ProtectedRoute>
+                            } />
+                            <Route path="*" element={<NotFoundPage />} />
+                        </Routes>
+                    </MainLayout>
+                    <ScrollToTopButton />
+                </BookingProvider>
             </div>
         </ThemeProvider>
     )
