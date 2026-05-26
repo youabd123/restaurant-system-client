@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useMenuItems } from '../Hooks/useMenuItems'
 import { useCategories } from '../Hooks/useCategories'
 import { useBasket } from '../context/BasketContext'
@@ -82,10 +82,12 @@ export default function MenuItemsPage() {
         .sort-select:focus { border-color: #c9a96e; }
         .section-title { font-family: 'Playfair Display', serif; font-size: 1.5rem; font-weight: 400; font-style: italic; color: #f5edd8; margin-bottom: 1.5rem; padding-bottom: 0.75rem; border-bottom: 0.5px solid rgba(200,169,81,0.2); display: flex; align-items: baseline; gap: 10px; }
         .section-count { font-family: 'DM Sans', sans-serif; font-size: 12px; font-style: normal; color: rgba(245,237,216,0.4); font-weight: 400; }
-        .dish-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem 0; border-bottom: 0.5px solid rgba(200,169,81,0.1); cursor: pointer; transition: background 0.15s; border-radius: 4px; }
+        .dish-row { display: flex; align-items: flex-start; gap: 1rem; padding: 1.25rem 0; border-bottom: 0.5px solid rgba(200,169,81,0.1); cursor: pointer; transition: background 0.2s, transform 0.2s, box-shadow 0.2s, border-color 0.2s; border-radius: 4px; }
         .dish-row.unavailable { opacity: 0.45; }
         .dish-row:last-child { border-bottom: none; }
-        .dish-row:hover { background: rgba(200,169,81,0.05); }
+        .dish-row:hover { background: rgba(200,169,81,0.06); transform: translateY(-3px); box-shadow: 0 6px 18px rgba(0,0,0,0.22); border-bottom-color: rgba(200,169,81,0.3) !important; }
+        .dish-fade { opacity: 0; transform: translateY(14px); transition: opacity 0.5s ease, transform 0.5s ease; }
+        .dish-fade.visible { opacity: 1; transform: translateY(0); }
         .dish-content { flex: 1; min-width: 0; }
         .dish-header { display: flex; align-items: baseline; justify-content: space-between; gap: 0.5rem; margin-bottom: 4px; flex-wrap: wrap; }
         .dish-name-row { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; }
@@ -161,14 +163,14 @@ export default function MenuItemsPage() {
                             <div className="section-title">
                                 {cat.name} <span className="section-count">{cat.items.length} rätter</span>
                             </div>
-                            {cat.items.map(item => (
-                                <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
+                            {cat.items.map((item, idx) => (
+                                <DishRow key={item.id} item={item} delay={idx * 60} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
                             ))}
                         </div>
                     ))
                 ) : (
-                    filtered.map(item => (
-                        <DishRow key={item.id} item={item} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
+                    filtered.map((item, idx) => (
+                        <DishRow key={item.id} item={item} delay={idx * 60} open={openItem === item.id} onToggle={() => toggleItem(item.id)} onAdd={() => addItem(item)} />
                     ))
                 )}
             </div>
@@ -176,13 +178,25 @@ export default function MenuItemsPage() {
     )
 }
 
-function DishRow({ item, open, onToggle, onAdd }) {
+function DishRow({ item, open, onToggle, onAdd, delay = 0 }) {
     const isAvailable = item.isAvailable !== false
     const chefsPick = isChefsPick(item.name)
     const allergens = getAllergens(item.name, item.description)
+    const ref = useRef(null)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            ([entry]) => { if (entry.isIntersecting) { el.classList.add('visible'); observer.unobserve(el) } },
+            { threshold: 0.1 }
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [])
 
     return (
-        <div className={`dish-row${isAvailable ? '' : ' unavailable'}`} onClick={onToggle}>
+        <div ref={ref} className={`dish-row dish-fade${isAvailable ? '' : ' unavailable'}`} style={{ transitionDelay: `${delay}ms` }} onClick={onToggle}>
             <div className="dish-content">
                 <div className="dish-header">
                     <div className="dish-name-row">

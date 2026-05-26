@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import { useOrders } from '../Hooks/useOrders'
 import { updateOrder } from '../api/orderApi'
 import { useAuth } from '../context/AuthContext'
@@ -93,7 +94,32 @@ export default function OrdersPage() {
             </div>
 
             {error && <div className="empty">{error}</div>}
-            {!error && filtered.length === 0 && <div className="empty">Inga ordrar hittades.</div>}
+            {!error && filtered.length === 0 && (
+                <div style={{ textAlign: 'center', padding: '4rem 2rem' }}>
+                    <div style={{ fontFamily: "'Playfair Display', serif", color: '#c9a96e', fontSize: '3rem', opacity: 0.25, marginBottom: '1.5rem' }}>✦</div>
+                    <div style={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', fontSize: '1.6rem', fontStyle: 'italic', marginBottom: '0.75rem' }}>
+                        {orders.length === 0 ? 'Inga beställningar ännu' : 'Inga ordrar hittades'}
+                    </div>
+                    <div style={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(245,237,216,0.45)', fontSize: '14px', fontWeight: 300, marginBottom: '2rem' }}>
+                        {orders.length === 0 ? 'Utforska vår meny och gör din första beställning.' : 'Inga ordrar matchar det valda filtret.'}
+                    </div>
+                    {orders.length === 0 && (
+                        <Link to="/menu-items" style={{ textDecoration: 'none' }}>
+                            <button style={{
+                                background: '#b8860b', color: '#140d06', border: 'none',
+                                padding: '0.65rem 1.75rem', borderRadius: '999px',
+                                fontSize: '13px', fontWeight: 500, fontFamily: "'DM Sans', sans-serif",
+                                cursor: 'pointer', transition: 'background 0.2s',
+                            }}
+                                onMouseEnter={e => e.target.style.background = '#c9a96e'}
+                                onMouseLeave={e => e.target.style.background = '#b8860b'}
+                            >
+                                Utforska menyn
+                            </button>
+                        </Link>
+                    )}
+                </div>
+            )}
 
             {!error && filtered.length > 0 && (
                 <table className="ord-table">

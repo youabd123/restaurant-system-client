@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -18,6 +19,67 @@ const reviews = [
     { name: 'Anders M.', text: 'Trattoria är vår familjs favorit. Autentisk smak, vänlig personal och perfekt läge på Avenyn.', stars: 5 },
     { name: 'Emma K.', text: 'Tiramisun var en ren dröm. Marco Rossis kök levererar varje gång — kommer definitivt tillbaka!', stars: 5 },
 ]
+
+const statsData = [
+    { value: 10000, suffix: '+', label: 'Nöjda gäster' },
+    { value: 1987, suffix: '', label: 'Grundat år' },
+    { value: 50, suffix: '+', label: 'Rätter på menyn' },
+]
+
+function StatCounter({ value, suffix, label }) {
+    const [count, setCount] = useState(0)
+    const [started, setStarted] = useState(false)
+    const ref = useRef(null)
+
+    useEffect(() => {
+        const el = ref.current
+        if (!el) return
+        const observer = new IntersectionObserver(
+            ([entry]) => { if (entry.isIntersecting && !started) { setStarted(true); observer.unobserve(el) } },
+            { threshold: 0.5 }
+        )
+        observer.observe(el)
+        return () => observer.disconnect()
+    }, [started])
+
+    useEffect(() => {
+        if (!started) return
+        const steps = 60
+        const increment = value / steps
+        let current = 0
+        const timer = setInterval(() => {
+            current += increment
+            if (current >= value) { setCount(value); clearInterval(timer) }
+            else setCount(Math.floor(current))
+        }, 1800 / steps)
+        return () => clearInterval(timer)
+    }, [started, value])
+
+    return (
+        <Box ref={ref} sx={{ textAlign: 'center', p: { xs: 3, md: 4 } }}>
+            <Typography sx={{
+                fontFamily: "'Playfair Display', serif",
+                color: '#c9a96e',
+                fontSize: { xs: '2.4rem', md: '3rem' },
+                fontWeight: 400,
+                lineHeight: 1,
+                mb: 0.75,
+            }}>
+                {value === 1987 ? count : count.toLocaleString('sv-SE')}{suffix}
+            </Typography>
+            <Typography sx={{
+                color: 'rgba(245,237,216,0.5)',
+                fontFamily: "'DM Sans', sans-serif",
+                fontSize: '13px',
+                fontWeight: 300,
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+            }}>
+                {label}
+            </Typography>
+        </Box>
+    )
+}
 
 const Stars = ({ count }) => (
     <span style={{ color: '#c9a96e', fontSize: '13px', letterSpacing: '2px' }}>
@@ -98,6 +160,26 @@ export default function HomePage() {
                         </Stack>
                     </Stack>
                 </Container>
+            </Box>
+
+            {/* Stats */}
+            <Box sx={{
+                background: '#1a1208',
+                border: '0.5px solid rgba(201,169,110,0.10)',
+                borderRadius: '12px',
+                mb: 3,
+                display: 'grid',
+                gridTemplateColumns: { xs: '1fr', md: 'repeat(3, 1fr)' },
+                overflow: 'hidden',
+            }}>
+                {statsData.map((s, i) => (
+                    <Box key={i} sx={{
+                        borderRight: { md: i < 2 ? '0.5px solid rgba(201,169,110,0.10)' : 'none' },
+                        borderBottom: { xs: i < 2 ? '0.5px solid rgba(201,169,110,0.10)' : 'none', md: 'none' },
+                    }}>
+                        <StatCounter value={s.value} suffix={s.suffix} label={s.label} />
+                    </Box>
+                ))}
             </Box>
 
             {/* Highlights */}
