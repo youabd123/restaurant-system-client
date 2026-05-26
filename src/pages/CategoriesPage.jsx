@@ -4,29 +4,6 @@ import Box from '@mui/material/Box'
 import Grid from '@mui/material/Grid'
 import CircularProgress from '@mui/material/CircularProgress'
 
-function CategoryMonogram({ name }) {
-    return (
-        <div style={{
-            width: '52px',
-            height: '52px',
-            borderRadius: '10px',
-            background: 'rgba(201,169,110,0.07)',
-            border: '0.5px solid rgba(201,169,110,0.2)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            fontFamily: "'Playfair Display', serif",
-            fontSize: '1.4rem',
-            color: '#c9a96e',
-            fontStyle: 'italic',
-            flexShrink: 0,
-            transition: 'all 0.3s',
-        }}>
-            {name?.charAt(0)?.toUpperCase() ?? '?'}
-        </div>
-    )
-}
-
 export default function CategoriesPage() {
     const [categories, setCategories] = useState([])
     const [loading, setLoading] = useState(true)
@@ -81,61 +58,41 @@ export default function CategoriesPage() {
                             background: '#1a1208',
                             border: '0.5px solid rgba(201,169,110,0.10)',
                             borderRadius: '12px',
-                            padding: '1.4rem 1.5rem',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '1.25rem',
+                            padding: '1.75rem 1.5rem',
                             transition: 'all 0.3s cubic-bezier(0.25,0.8,0.25,1)',
                             cursor: 'default',
                             '&:hover': {
                                 transform: 'translateY(-4px)',
                                 borderColor: 'rgba(201,169,110,0.28)',
                                 boxShadow: '0 14px 36px rgba(0,0,0,0.4)',
-                                '& .monogram': {
-                                    background: 'rgba(201,169,110,0.14)',
-                                    borderColor: 'rgba(201,169,110,0.35)',
-                                }
                             }
                         }}>
-                            <div className="monogram" style={{
-                                width: '52px',
-                                height: '52px',
-                                borderRadius: '10px',
-                                background: 'rgba(201,169,110,0.07)',
-                                border: '0.5px solid rgba(201,169,110,0.2)',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontFamily: "'Playfair Display', serif",
-                                fontSize: '1.4rem',
-                                color: '#c9a96e',
-                                fontStyle: 'italic',
-                                flexShrink: 0,
-                                transition: 'all 0.3s',
+                            <Box sx={{
+                                fontSize: '10px',
+                                color: 'rgba(201,169,110,0.5)',
+                                letterSpacing: '0.2em',
+                                mb: 1,
                             }}>
-                                {cat.name?.charAt(0)?.toUpperCase() ?? '?'}
-                            </div>
-
-                            <div style={{ flex: 1, minWidth: 0 }}>
-                                <div style={{
-                                    fontFamily: "'Playfair Display', serif",
-                                    color: '#f5edd8',
-                                    fontSize: '1.1rem',
-                                    fontWeight: 400,
-                                    marginBottom: '5px',
-                                }}>
-                                    {cat.name}
-                                </div>
-                                <div style={{
-                                    color: 'rgba(245,237,216,0.42)',
-                                    fontSize: '13px',
-                                    fontWeight: 300,
-                                    lineHeight: 1.6,
-                                    fontFamily: "'DM Sans', sans-serif",
-                                }}>
-                                    {cat.description || 'Traditionellt tillagade råvaror av högsta kvalitet.'}
-                                </div>
-                            </div>
+                                ✦
+                            </Box>
+                            <Box sx={{
+                                fontFamily: "'Playfair Display', serif",
+                                color: '#f5edd8',
+                                fontSize: '1.15rem',
+                                fontWeight: 400,
+                                mb: 0.75,
+                            }}>
+                                {cat.name}
+                            </Box>
+                            <Box sx={{
+                                color: 'rgba(245,237,216,0.42)',
+                                fontSize: '13px',
+                                fontWeight: 300,
+                                lineHeight: 1.6,
+                                fontFamily: "'DM Sans', sans-serif",
+                            }}>
+                                {cat.description || 'Traditionellt tillagade råvaror av högsta kvalitet.'}
+                            </Box>
                         </Box>
                     </Grid>
                 ))}
