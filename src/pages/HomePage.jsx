@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography'
 import Stack from '@mui/material/Stack'
 import Grid from '@mui/material/Grid'
 import { useBooking } from '../context/BookingContext'
+import { getMenuItems } from '../api/menuItemApi'
 
 const highlights = [
     { symbol: '✦', title: 'Färska råvaror', desc: 'Ingredienser hämtade från lokala producenter varje morgon för maximal smak och kvalitet.' },
@@ -89,6 +90,19 @@ const Stars = ({ count }) => (
 
 export default function HomePage() {
     const { openModal } = useBooking()
+    const menuRef = useRef(null)
+    const [featuredItems, setFeaturedItems] = useState([])
+
+    useEffect(() => {
+        getMenuItems()
+            .then(res => {
+                const items = Array.isArray(res.data) ? res.data.slice(0, 3) : []
+                setFeaturedItems(items)
+            })
+            .catch(() => {})
+    }, [])
+
+    const scrollToMenu = () => menuRef.current?.scrollIntoView({ behavior: 'smooth' })
 
     return (
         <Box sx={{ fontFamily: "'DM Sans', sans-serif" }}>
@@ -132,8 +146,7 @@ export default function HomePage() {
                         <Stack direction="row" spacing={2} sx={{ mt: 1 }}>
                             <Button
                                 variant="contained"
-                                component={Link}
-                                to="/menu-items"
+                                onClick={scrollToMenu}
                                 sx={{
                                     borderRadius: '30px', px: 4, py: 1.5,
                                     fontWeight: 500, backgroundColor: '#b8860b', color: '#140d06',
@@ -259,6 +272,62 @@ export default function HomePage() {
                         </Box>
                     </Grid>
                 </Grid>
+            </Box>
+
+            {/* Utvalda rätter – scroll-mål för "Se menyn" */}
+            <Box ref={menuRef} sx={{ background: '#1a1208', border: '0.5px solid rgba(201,169,110,0.10)', borderRadius: '12px', p: { xs: 3, md: 5 }, mb: 3 }}>
+                <Box sx={{ textAlign: 'center', mb: 4 }}>
+                    <Typography sx={{ fontFamily: "'DM Sans', sans-serif", color: '#c9a96e', fontSize: '11px', fontWeight: 500, letterSpacing: '0.3em', textTransform: 'uppercase', opacity: 0.8, mb: 1 }}>
+                        Utvalda rätter
+                    </Typography>
+                    <Typography sx={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', fontSize: { xs: '1.6rem', md: '2rem' }, fontStyle: 'italic' }}>
+                        Husets favoriter
+                    </Typography>
+                </Box>
+
+                {featuredItems.length > 0 ? (
+                    <Grid container spacing={2} sx={{ mb: 4 }}>
+                        {featuredItems.map(item => (
+                            <Grid item xs={12} md={4} key={item.id}>
+                                <Box sx={{
+                                    background: '#120d05',
+                                    border: '0.5px solid rgba(201,169,110,0.12)',
+                                    borderRadius: '10px',
+                                    p: '1.5rem 1.75rem',
+                                    textAlign: 'center',
+                                    transition: 'all 0.3s ease',
+                                    '&:hover': { borderColor: 'rgba(201,169,110,0.35)', transform: 'translateY(-3px)' },
+                                }}>
+                                    <Typography sx={{ fontFamily: "'Playfair Display', serif", color: '#f5edd8', fontSize: '1.05rem', mb: 1.5 }}>
+                                        {item.name}
+                                    </Typography>
+                                    <Typography sx={{ fontFamily: "'DM Sans', sans-serif", color: '#c9a96e', fontSize: '1.2rem', fontWeight: 500 }}>
+                                        {item.price} kr
+                                    </Typography>
+                                </Box>
+                            </Grid>
+                        ))}
+                    </Grid>
+                ) : (
+                    <Box sx={{ textAlign: 'center', py: 3, color: 'rgba(245,237,216,0.3)', fontSize: '14px', mb: 3 }}>
+                        Laddar rätter...
+                    </Box>
+                )}
+
+                <Box sx={{ textAlign: 'center' }}>
+                    <Button
+                        component={Link}
+                        to="/menu-items"
+                        sx={{
+                            color: '#c9a96e', textTransform: 'none',
+                            fontFamily: "'DM Sans', sans-serif", fontSize: '13px',
+                            border: '0.5px solid rgba(201,169,110,0.3)', borderRadius: '8px', px: 3, py: 0.8,
+                            '&:hover': { bgcolor: 'rgba(201,169,110,0.05)', borderColor: '#c9a96e' }
+                        }}
+                    >
+                        Se hela menyn →
+                    </Button>
+                </Box>
             </Box>
 
             {/* Kundrecensioner */}

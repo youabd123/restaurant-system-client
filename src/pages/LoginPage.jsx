@@ -153,7 +153,7 @@ export default function LoginPage() {
                         },
                     }}
                 >
-                    {loading ? <CircularProgress size={18} sx={{ color: '#140d06' }} /> : 'Logga in'}
+                    {loading ? 'Loggar in...' : 'Logga in'}
                 </Button>
 
                 <Button

@@ -12,6 +12,7 @@ import CheckoutPage from './pages/CheckoutPage'
 import LoginPage from './pages/LoginPage'
 import RegisterPage from './pages/RegisterPage'
 import NotFoundPage from './pages/NotFoundPage'
+import ProfilePage from './pages/ProfilePage'
 import ProtectedRoute from './components/ProtectedRoute'
 import ScrollToTopButton from './components/ScrollToTopButton'
 import { BookingProvider } from './context/BookingContext'
@@ -47,9 +48,10 @@ function App() {
                             <Route path="/categories" element={<CategoriesPage />} />
                             <Route path="/menu-items" element={<MenuItemsPage />} />
                             <Route path="/checkout" element={<CheckoutPage />} />
-                            <Route path="/orders" element={
+                            <Route path="/orders" element={<OrdersPage />} />
+                            <Route path="/profile" element={
                                 <ProtectedRoute>
-                                    <OrdersPage />
+                                    <ProfilePage />
                                 </ProtectedRoute>
                             } />
                             <Route path="*" element={<NotFoundPage />} />
