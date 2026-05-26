@@ -310,7 +310,7 @@ export default function MainLayout({ children }) {
 
                     <Box sx={{ borderTop: '0.5px solid rgba(201,169,110,0.06)', pt: 3, textAlign: 'center' }}>
                         <Typography sx={{ fontFamily: "'DM Sans', sans-serif", color: 'rgba(245,237,216,0.2)', fontSize: '11px', letterSpacing: '0.1em', textTransform: 'uppercase' }}>
-                            © 2024 Trattoria · Göteborg · Smaker från Toscana sedan 1987
+                            © 2026 Trattoria · Göteborg · Smaker från Toscana sedan 1987
                         </Typography>
                     </Box>
                 </Container>
