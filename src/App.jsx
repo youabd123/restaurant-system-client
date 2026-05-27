@@ -48,7 +48,11 @@ function App() {
                             <Route path="/categories" element={<CategoriesPage />} />
                             <Route path="/menu-items" element={<MenuItemsPage />} />
                             <Route path="/checkout" element={<CheckoutPage />} />
-                            <Route path="/orders" element={<OrdersPage />} />
+                            <Route path="/orders" element={
+                                <ProtectedRoute requiredRole="Admin">
+                                    <OrdersPage />
+                                </ProtectedRoute>
+                            } />
                             <Route path="/profile" element={
                                 <ProtectedRoute>
                                     <ProfilePage />
